@@ -1,0 +1,70 @@
+#
+# SECURITY WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+#
+# If you don't protect this directory from direct web access, anybody will be able to see your passwords.
+# http://nette.org/security-warning
+#
+common:
+	parameters:
+		password: 1234
+
+		ssh:
+			server: localhost
+			port: 22
+			username: root
+			publicCertificate: %appDir%/certificates/id_rsa.pub
+			privateCertificate: %appDir%/certificates/id_rsa
+
+		rsaDir: /usr/share/doc/openvpn/examples/easy-rsa/2.0
+		keysDir: keys
+
+		email:
+			from: 'Tomáš Kolinger <tomas@kolinger.name>'
+			subject: 'VPN configuration'
+
+
+	php:
+		date.timezone: Europe/Prague
+		# zlib.output_compression: yes
+
+	nette:
+		database:
+			dsn: "sqlite:%appDir%/model/database.db"
+
+		session:
+			expiration: 14 days
+
+
+	services:
+		authenticator:
+			class: Authenticator
+
+		routerFactory:
+			class: RouterFactory
+
+		router:
+			factory: @routerFactory::createRouter
+
+		accountRepository:
+			class: AccountRepository
+
+		paymentRepository:
+			class: PaymentRepository
+
+		ssh:
+			class: SSH
+			arguments: [%ssh.server%, %ssh.port%]
+			setup:
+				- setUsername(%ssh.username%)
+				- setCertificates(%ssh.publicCertificate%, %ssh.privateCertificate%)
+
+		configuration:
+			class: Configuration
+
+
+	factories:
+
+
+production < common:
+
+development < common:

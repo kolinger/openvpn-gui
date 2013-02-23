@@ -1,0 +1,47 @@
+<!doctype html>
+<!--[if lt IE 7 ]><html class="ie ie6 no-js" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7 no-js" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8 no-js" lang="en"><![endif]-->
+<!--[if IE 9 ]><html class="ie ie9 no-js" lang="en"><![endif]-->
+<!--[if gt IE 9]><!--><html class="no-js" lang="en"><!--<![endif]-->
+	<head data-template-set="html5-reset">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+		<title>{$title}</title>
+		<meta name="title" content="{$title}">
+		<meta name="description" content="OpenVPN GUI">
+		<meta name="author" content="Tomáš Kolinger">
+		<meta name="Copyright" content="Copyright Tomáš Kolinger 2013. All Rights Reserved.">
+
+		<meta name="robots" content="noindex, nofllow">
+
+		<link rel="stylesheet" href="{$basePath}/_/css/style.css">
+		<link rel="stylesheet" href="{$basePath}/jquery-ui/css/smoothness/jquery-ui-1.9.2.custom.min.css">
+		<link rel="stylesheet" href="{$basePath}/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="{$basePath}/_/css/default.css">
+
+		<script src="{$basePath}/_/js/modernizr-1.7.min.js"></script>
+	</head>
+	<body class="container">
+
+		<div class="page-header clearfix">
+			<h1 class="pull-left"><a n:href="Account:">OpenVPN GUI</a></h1>
+
+			{if $user->isLoggedIn()}
+				<a n:href="User:logout" class="btn pull-right btn-large btn-danger">Odhlásit se</a>
+				<a n:href="Account:create" class="btn pull-right btn-large btn-primary">Vytvořit účet</a>
+				<a n:href="Account:" class="btn pull-right btn-large btn-primary">Přehled</a>
+			{/if}
+		</div>
+
+		{snippet flashes}<div class="alert alert-{$flash->type}" n:foreach="$flashes as $flash">{$flash->message}</div>{/snippet}
+
+		{include #content}
+
+		<script src="{$basePath}/_/js/jquery-1.8.3.min.js"></script>
+		<script src="{$basePath}/jquery-ui/js/jquery-ui-1.9.2.custom.min.js"></script>
+		<script src="{$basePath}/bootstrap/js/bootstrap.min.js"></script>
+		<script src="{$basePath}/_/js/functions.js"></script>
+	</body>
+</html>

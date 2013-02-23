@@ -1,0 +1,44 @@
+{form form, class => 'form-horizontal create'}
+	<div class="alert alert-error" n:foreach="$form->errors as $error">{$error}</div>
+
+	<div class="control-group">
+		{label username, class => 'control-label' /}
+		<div class="controls">
+			{input username, class => 'span6'}
+		</div>
+	</div>
+
+	<div class="control-group">
+		{label email, class => 'control-label' /}
+		<div class="controls">
+			{input email, class => 'span6'}
+		</div>
+	</div>
+
+	<div class="control-group">
+		{label name, class => 'control-label' /}
+		<div class="controls">
+			{input name, class => 'span6'}
+		</div>
+	</div>
+
+	<div class="control-group">
+		{label free, class => 'control-label' /}
+		<div class="controls">
+			{input free}
+		</div>
+	</div>
+
+	<div class="control-group">
+		{label note, class => 'control-label' /}
+		<div class="controls">
+			{input note, class => 'span6'}
+		</div>
+	</div>
+
+	<div class="control-group">
+		<div class="controls">
+			{input save, class => 'btn'}
+		</div>
+	</div>
+{/form}

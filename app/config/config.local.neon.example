@@ -1,0 +1,20 @@
+parameters:
+	password: 1234
+
+	ssh:
+		server: localhost
+		port: 22
+		username: root
+
+	rsaDir: /usr/share/doc/openvpn/examples/easy-rsa/2.0 	# path to RSA binaries like './build-key', './revoke-full', ...
+	keysDir: keys 											# certificates path (from RSA dir)
+
+	email:
+		from: 'Your Name <vpn@server.tdl>'
+		subject: 'VPN configuration'
+		
+nette:
+
+services:
+
+factories:

@@ -1,0 +1,87 @@
+.page-header .btn {
+	margin-top: 5px;
+	margin-left: 10px;
+}
+
+.table td,
+.table th {
+	vertical-align: middle;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.table th.right {
+	width: 76px;
+}
+
+form.create label.control-label {
+	width: 80px;
+}
+
+form.create .controls {
+	margin-left: 100px;
+}
+
+form.payment label.control-label {
+	width: 80px;
+}
+
+form.payment .controls {
+	margin-left: 100px;
+}
+
+h1 a,
+h1 a:hover {
+	color: #333;
+}
+
+.container {
+	width: 1200px;
+}
+
+table.list tr td:last-child {
+	text-align: right;
+}
+
+table.payments {
+	table-layout: fixed;
+}
+
+table.payments td,
+table.payments th {
+	width: 91px;
+	height: 70px;
+	padding: 0;
+	text-align: center;
+}
+
+table.payments a {
+	display: block;
+	width: 100%;
+	height: 100%;
+	text-decoration: none;
+}
+
+table.payments td.normal {
+	background: url('../img/normal.png') center no-repeat;
+}
+
+table.payments td.ok {
+	background: url('../img/ok.png') center no-repeat;
+}
+
+table.payments td.bad {
+	background: url('../img/bad.png') center no-repeat;
+}
+
+table.payments td.warning {
+	background: url('../img/warning.png') center no-repeat;
+}
+
+a:focus {
+	outline: none;
+}
+
+.btn-group {
+	text-align: left;
+}
