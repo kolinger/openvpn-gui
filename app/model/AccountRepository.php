@@ -60,6 +60,9 @@ class AccountRepository extends Repository
 			->order('active DESC, createDate');
 
 		foreach ($filters as $key => $value) {
+			if ($value == -1) {
+				continue;
+			}
 			if ($key === 'state' || $key === 'active') {
 				$rows->where($key . ' = ?', $value);
 			} else {
@@ -79,35 +82,35 @@ class AccountRepository extends Repository
 				$payments = $this->paymentRepository->findByAccount($account->getId());
 				$breaks = $this->paymentRepository->findBreaksByAccount($account->getId());
 				for ($year = $account->getCreateDate()->format('Y'); $year <= date('Y'); $year++) {
-					if ($year == date('Y')) {
+					if ($year == $account->getCreateDate()->format('Y')) {
+						$start = $account->getCreateDate()->format('j') > 9 ? $account->getCreateDate()->format('n') + 1 : $account->getCreateDate()->format('n');
+						$end = 12;
+					} else if ($year == date('Y')) {
 						$end = date('n');
 						$start = 1;
-					} else if ($year == $account->getCreateDate()->format('Y')) {
-						$start = $account->getCreateDate()->format('j') > 20 ? $account->getCreateDate()->format('n') + 1 : $account->getCreateDate()->format('n');
-						$end = 12;
 					} else {
 						$start = 1;
 						$end = 12;
 					}
-					for ($month = $start; $month <= $end; $month++) {
-						$break = isset($break) && $break !== NULL && ($break->getEnd()->getTimestamp() == time() || $break->getEnd()->getTimestamp() > strtotime(date($year . '-' . $month . '-01'))) ? $break : (isset($breaks[$year . '-' . $month]) ? $breaks[$year . '-' . $month] : NULL);
-						if (isset($payments[$year . '-' . $month])) {
-							if ($payments[$year . '-' . $month]->getState() == Payment::STATE_WAITING) {
-								$waiting = TRUE;
-							} else if ($payments[$year . '-' . $month]->getState() == Payment::STATE_UNPAID) {
+					if (strtotime($year . '-' . $start . '-01') < time()) {
+						for ($month = $start; $month <= $end; $month++) {
+							$break = isset($break) && $break !== NULL && ($break->getEnd()->getTimestamp() == time() || $break->getEnd()->getTimestamp() > strtotime(date($year . '-' . $month . '-01'))) ? $break : (isset($breaks[$year . '-' . $month]) ? $breaks[$year . '-' . $month] : NULL);
+							if (isset($payments[$year . '-' . $month])) {
+								if ($payments[$year . '-' . $month]->getState() == Payment::STATE_WAITING) {
+									$waiting = TRUE;
+								} else if ($payments[$year . '-' . $month]->getState() == Payment::STATE_UNPAID) {
+									if (!$break) {
+										$unpaid = TRUE;
+									}
+								}
+							} else {
 								if (!$break) {
 									$unpaid = TRUE;
 								}
 							}
-						} else {
-							if (!$break) {
-								$unpaid = TRUE;
-							}
 						}
 					}
 				}
-
-
 
 				if ($unpaid) {
 					$account->setState(Account::STATE_UNPAID);

@@ -190,11 +190,11 @@ class AccountPresenter extends BasePresenter
 				$filters['email'] = trim($values->email);
 			}
 
-			if (in_array($values->state, array(0, 1, 2, 3))) { // TODO: refactor
+			if (in_array($values->state, array(-1, 0, 1, 2, 3))) { // TODO: refactor
 				$filters['state'] = $values->state;
 			}
 
-			if (in_array($values->active, array(0, 1))) {
+			if (in_array($values->active, array(-1, 0, 1))) {
 				$filters['active'] = $values->active;
 			}
 
