@@ -17,11 +17,11 @@ class RouterFactory
 	{
 		$router = new \Nette\Application\Routers\RouteList();
 
-		$router[] = new Route('login', 'User:login');
-		$router[] = new Route('logout', 'User:logout');
-		$router[] = new Route('create', 'Account:create');
-		$router[] = new Route('view/<id>', 'Account:view');
-		$router[] = new Route('<presenter>[/<action>][/<id>]', 'Account:default');
+		$router[] = new Route('login', 'User:login', Route::SECURED);
+		$router[] = new Route('logout', 'User:logout', Route::SECURED);
+		$router[] = new Route('create', 'Account:create', Route::SECURED);
+		$router[] = new Route('view/<id>', 'Account:view', Route::SECURED);
+		$router[] = new Route('<presenter>[/<action>][/<id>]', 'Account:default', Route::SECURED);
 
 		return $router;
 	}
