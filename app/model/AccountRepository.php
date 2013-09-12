@@ -11,11 +11,11 @@ class AccountRepository extends Repository
 	/**
 	 * Commands
 	 */
-	const CREATE_COMMAND = 'cd %s && source ./vars && ./pkitool %s';
+	const CREATE_COMMAND = 'cd %s && source ./vars && export KEY_CN="%s" && export KEY_NAME="%s" && ./pkitool %s';
 	const ZIP_COMMAND = 'cd %s && zip %s.zip ca.crt %s.crt %s.key';
 	const CHECK_COMMAND = 'cd %s && cd %s && ls %s*';
 	const REVOKE_COMMAND = 'cd %s && source ./vars && ./revoke-full %s';
-	const CRL_COMMAND = 'cd %s && source ./vars && cd %s && export KEY_CN="" && export KEY_OU="" && export KEY_NAME="" && $OPENSSL ca -gencrl -out "crl.pem" -config "$KEY_CONFIG"';
+	const CRL_COMMAND = 'cd %s && source ./vars && cd %s && export KEY_CN="%s" && export KEY_OU="VPN" && export KEY_NAME="%s" && $OPENSSL ca -gencrl -out "crl.pem" -config "$KEY_CONFIG"';
 
 	/**
 	 * @var SSH
@@ -170,7 +170,7 @@ class AccountRepository extends Repository
 
 		try {
 			$this->connection->query('INSERT INTO ' . static::TABLE_NAME, $data);
-			$this->ssh->execute(sprintf(self::CREATE_COMMAND, $this->getConfig('rsaDir'), $username));
+			$this->ssh->execute(sprintf(self::CREATE_COMMAND, $this->getConfig('rsaDir'), $username, $username, $username));
 		} catch (\PDOException $e) {
 			if (strpos($e->getMessage(), 'column username is not unique')) {
 				throw new \Nette\InvalidArgumentException('Uživatelské jméno je již obsazené');
@@ -249,7 +249,7 @@ class AccountRepository extends Repository
 		rmdir($tempDir);
 
 		// re-generate CRL
-		$this->ssh->execute(sprintf(static::CRL_COMMAND, $this->getConfig('rsaDir'), $this->getConfig('keysDir')));
+		$this->ssh->execute(sprintf(static::CRL_COMMAND, $this->getConfig('rsaDir'), $this->getConfig('keysDir'), $account->getUsername(), $account->getUsername()));
 
 		// update database
 		$this->connection->query('UPDATE ' . static::TABLE_NAME . ' SET ? WHERE id = ?', array('active' => TRUE), $account->getId());
