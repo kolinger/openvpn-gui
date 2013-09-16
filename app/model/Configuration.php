@@ -37,7 +37,7 @@ class Configuration extends \Nette\Object
 	{
 		$this->ssh = $ssh;
 		$this->container = $container;
-		$this->remotePath = $container->parameters['rsaDir'] . '/' .$container->parameters['keysDir'];
+		$this->remotePath = $container->parameters['rsaDir'] . '/keys';
 	}
 
 

@@ -1,13 +1,15 @@
 parameters:
 	password: 1234
+	useHttps: true
 
 	ssh:
 		server: localhost
 		port: 22
 		username: root
+		publicCertificate: %appDir%/certificates/id_rsa.pub
+		privateCertificate: %appDir%/certificates/id_rsa.key
 
-	rsaDir: /usr/share/doc/openvpn/examples/easy-rsa/2.0 	# path to RSA binaries like './build-key', './revoke-full', ...
-	keysDir: keys 											# certificates path (from RSA dir)
+	rsaDir: /etc/openvpn/easy-rsa
 
 	email:
 		from: 'Your Name <vpn@server.tdl>'

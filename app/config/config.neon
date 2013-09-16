@@ -14,10 +14,9 @@ common:
 			port: 22
 			username: root
 			publicCertificate: %appDir%/certificates/id_rsa.pub
-			privateCertificate: %appDir%/certificates/id_rsa
+			privateCertificate: %appDir%/certificates/id_rsa.key
 
-		rsaDir: /usr/share/doc/openvpn/examples/easy-rsa/2.0
-		keysDir: keys
+		rsaDir: /etc/openvpn/easy-rsa
 
 		email:
 			from: 'Tomáš Kolinger <tomas@kolinger.name>'
