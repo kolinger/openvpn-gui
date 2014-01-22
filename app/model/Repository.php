@@ -1,4 +1,6 @@
 <?php
+use Nette\Database\Row;
+use Nette\Database\Table\ActiveRow;
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
@@ -28,8 +30,11 @@ class Repository extends \Nette\Object
 	 * @param Nette\Database\Table\ActiveRow $row
 	 * @return object
 	 */
-	protected function fillEntity($entity, \Nette\Database\Table\ActiveRow $row)
+	protected function fillEntity($entity, $row)
 	{
+		if (!$row instanceof ActiveRow && !$row instanceof Row) {
+			return null;
+		}
 		$entity = new $entity;
 		foreach ($row as $key => $value) {
 			if (strpos($key, '_id') !== FALSE) {

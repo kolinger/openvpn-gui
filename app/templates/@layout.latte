@@ -28,11 +28,8 @@
 		<div class="page-header clearfix">
 			<h1 class="pull-left"><a n:href="Account:">OpenVPN GUI</a></h1>
 
-			{if $user->isLoggedIn()}
-				<a n:href="User:logout" class="btn pull-right btn-large btn-danger">Odhlásit se</a>
-				<a n:href="Account:create" class="btn pull-right btn-large btn-primary">Vytvořit účet</a>
-				<a n:href="Account:" class="btn pull-right btn-large btn-primary">Přehled</a>
-			{/if}
+			<a n:href="Account:create" class="btn pull-right btn-large btn-primary">Vytvořit účet</a>
+			<a n:href="Account:" class="btn pull-right btn-large btn-primary">Přehled</a>
 		</div>
 
 		{snippet flashes}<div class="alert alert-{$flash->type}" n:foreach="$flashes as $flash">{$flash->message}</div>{/snippet}

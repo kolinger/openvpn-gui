@@ -7,9 +7,8 @@ class Account extends \Nette\Object
 {
 
 	const STATE_OK = 0;
-	const STATE_ENDED = 1;
-	const STATE_WAITING = 2;
-	const STATE_UNPAID = 3;
+	const STATE_UNPAID = 1;
+	const STATE_FREE = 2;
 
 	/**
 	 * @var int
@@ -25,11 +24,6 @@ class Account extends \Nette\Object
 	 * @var string
 	 */
 	private $username;
-
-	/**
-	 * @var string
-	 */
-	private $name;
 
 	/**
 	 * @var string
@@ -57,7 +51,6 @@ class Account extends \Nette\Object
 	private $state;
 
 
-
 	/**
 	 * @return int
 	 */
@@ -65,7 +58,6 @@ class Account extends \Nette\Object
 	{
 		return $this->id;
 	}
-
 
 
 	/**
@@ -86,7 +78,6 @@ class Account extends \Nette\Object
 	}
 
 
-
 	/**
 	 * @param bool $active
 	 */
@@ -94,27 +85,6 @@ class Account extends \Nette\Object
 	{
 		$this->active = $active;
 	}
-
-
-
-	/**
-	 * @return int
-	 */
-	public function getState()
-	{
-		return $this->state;
-	}
-
-
-
-	/**
-	 * @param int $state
-	 */
-	public function setState($state)
-	{
-		$this->state = $state;
-	}
-
 
 
 	/**
@@ -126,7 +96,6 @@ class Account extends \Nette\Object
 	}
 
 
-
 	/**
 	 * @param string $username
 	 */
@@ -134,27 +103,6 @@ class Account extends \Nette\Object
 	{
 		$this->username = $username;
 	}
-
-
-
-	/**
-	 * @return string
-	 */
-	public function getName()
-	{
-		return $this->name;
-	}
-
-
-
-	/**
-	 * @param string $name
-	 */
-	public function setName($name)
-	{
-		$this->name = $name;
-	}
-
 
 
 	/**
@@ -166,7 +114,6 @@ class Account extends \Nette\Object
 	}
 
 
-
 	/**
 	 * @param string $email
 	 */
@@ -174,7 +121,6 @@ class Account extends \Nette\Object
 	{
 		$this->email = $email;
 	}
-
 
 
 	/**
@@ -186,7 +132,6 @@ class Account extends \Nette\Object
 	}
 
 
-
 	/**
 	 * @param string $note
 	 */
@@ -194,7 +139,6 @@ class Account extends \Nette\Object
 	{
 		$this->note = $note;
 	}
-
 
 
 	/**
@@ -206,7 +150,6 @@ class Account extends \Nette\Object
 	}
 
 
-
 	/**
 	 * @param \DateTime $createDate
 	 */
@@ -214,7 +157,6 @@ class Account extends \Nette\Object
 	{
 		$this->createDate = \Nette\DateTime::from($createDate);
 	}
-
 
 
 	/**
@@ -226,7 +168,6 @@ class Account extends \Nette\Object
 	}
 
 
-
 	/**
 	 * @param bool $free
 	 */
@@ -235,4 +176,21 @@ class Account extends \Nette\Object
 		$this->free = $free;
 	}
 
+
+	/**
+	 * @param int $state
+	 */
+	public function setState($state)
+	{
+		$this->state = $state;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getState()
+	{
+		return $this->state;
+	}
 }

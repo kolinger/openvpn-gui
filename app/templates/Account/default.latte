@@ -5,11 +5,9 @@
 
 	{input username, class => 'input-small span2', placeholder => 'Uživ. jméno'}
 
-	{input name, class => 'input-small span2', placeholder => 'Jméno'}
-
 	{input email, class => 'input-small span2', placeholder => 'E-mail'}
 
-	{*input state, class => 'span2'*}
+	{input state, class => 'span2'}
 
 	{input active, class => 'span2'}
 
@@ -22,7 +20,6 @@
 	<thead>
 		<tr>
 			<th>Účet</th>
-			<th>Jméno</th>
 			<th>E-mail</th>
 			<th>Stav</th>
 			<th>&nbsp;</th>
@@ -31,17 +28,14 @@
 	<tbody>
 		<tr n:foreach="$accounts as $account">
 			<td>{$account->getUserName()}</td>
-			<td>{$account->getName()}</td>
 			<td>{$account->getEmail()}</td>
 			<td>
 				{if $account->getState() == Account::STATE_OK}
 					<span class="label label-success">v pořádku</span>
-				{elseif $account->getState() == Account::STATE_ENDED}
-					<span class="label label-success">ukončeno</span>
-				{elseif $account->getState() == Account::STATE_WAITING}
-					<span class="label label-warning">dohodnuto</span>
-				{else}
+				{elseif $account->getState() == Account::STATE_UNPAID}
 					<span class="label label-important">nezaplaceno</span>
+				{elseif $account->getState() == Account::STATE_FREE}
+					<span class="label label-success">zadarmo</span>
 				{/if}
 
 				{if $account->getActive()}
@@ -51,29 +45,13 @@
 				{/if}
 			</td>
 			<td>
-
-				<a n:href="Account:payments, $account->getId()" class="btn">Platby</a>
-
+				<a n:href="Payment:default, $account->getId()" class="btn">Platby</a>
 
 				<div class="btn-group">
-					<button class="btn dropdown-toggle" data-toggle="dropdown">
-						Správa
-						<span class="caret"></span>
-					</button>
+					<button class="btn dropdown-toggle" data-toggle="dropdown">Správa <span class="caret"></span></button>
 					<ul class="dropdown-menu">
-						<li>
-							<a n:href="Account:edit, $account->getId()">Upravit</a>
-						</li>
-
-						<li>
-							<a n:href="Account:download, $account->getId()">Stáhnout konfiguraci</a>
-						</li>
-
-						<li>
-							<a n:href="Account:email, $account->getId()" class="question" data-question="Opravdu chcete odeslat instalační e-mail klientovi {$account->getName()}?">
-								Odeslat konfiguraci e-mailem
-							</a>
-						</li>
+						<li><a n:href="Account:edit, $account->getId()">Upravit</a></li>
+						<li><a n:href="Account:configurations, $account->getId()">Konfigurace</a></li>
 
 						<li class="divider"></li>
 

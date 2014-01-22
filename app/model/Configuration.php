@@ -3,7 +3,6 @@
 use Nette\Utils\Strings;
 
 
-
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
@@ -28,7 +27,6 @@ class Configuration extends \Nette\Object
 	private $remotePath;
 
 
-
 	/**
 	 * @param Nette\DI\Container $container
 	 * @param SSH $ssh
@@ -39,7 +37,6 @@ class Configuration extends \Nette\Object
 		$this->container = $container;
 		$this->remotePath = $container->parameters['rsaDir'] . '/keys';
 	}
-
 
 
 	/**
@@ -59,7 +56,6 @@ class Configuration extends \Nette\Object
 	}
 
 
-
 	/**
 	 * @param Account $account
 	 * @return array
@@ -74,20 +70,20 @@ class Configuration extends \Nette\Object
 	}
 
 
-
 	/**
 	 * @param Account $account
+	 * @param string $type
 	 * @param string $file
 	 */
-	public function createConfiguration(Account $account, $file)
+	public function createConfiguration(Account $account, $type, $file)
 	{
+		$latte = $this->container->parameters['configurations'][$type];
 		$template = new \Nette\Templating\FileTemplate();
 		$template->registerFilter(new Nette\Latte\Engine);
-		$template->setFile(__DIR__ . '/../templates/openvpn.latte');
+		$template->setFile(__DIR__ . '/../templates/configurations/' . $latte);
 		$template->userName = $account->getUsername();
 		$template->save($file);
 	}
-
 
 
 	/**
@@ -106,12 +102,12 @@ class Configuration extends \Nette\Object
 	}
 
 
-
 	/**
 	 * @param Account $account
+	 * @param string $type
 	 * @return string
 	 */
-	public function downloadAndZipFiles(Account $account)
+	public function downloadAndZipFiles(Account $account, $type)
 	{
 		// init
 		$tempDir = $this->getTempDir();
@@ -126,7 +122,7 @@ class Configuration extends \Nette\Object
 		}
 
 		// configuration
-		$this->createConfiguration($account, $tempDir . '/gateway.ovpn');
+		$this->createConfiguration($account, $type, $tempDir . '/gateway.ovpn');
 		$files[] = 'gateway.ovpn';
 
 		// zip
@@ -140,5 +136,4 @@ class Configuration extends \Nette\Object
 
 		return $tempDir . '.zip';
 	}
-
 }

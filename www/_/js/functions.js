@@ -131,21 +131,16 @@ $(document).ready(function (){
 		$.get(this.href);
 	});
 
-	$("form.payment").live('submit', function () {
-		$(this).ajaxSubmit();
-		$('#paymentInfo').modal('hide');
-		return false;
-	});
-
-	$("form.payment :submit").live('click', function () {
-		$(this).ajaxSubmit();
-		$('#paymentInfo').modal('hide');
-		return false;
-	});
-
 	$('.datepicker').datepicker({
 		dateFormat: 'd. m. yy',
 		regional: $.datepicker.regional['cs']
+	});
+
+	$('.dialog-edit').live('click', function (event) {
+		event.preventDefault();
+		$.get(this.href).success(function () {
+			$('#form').modal('show');
+		});
 	});
 
 	$('#paymentInfo').modal();

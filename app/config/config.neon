@@ -6,9 +6,7 @@
 #
 common:
 	parameters:
-		password: 1234
 		useHttps: true
-
 		ssh:
 			server: localhost
 			port: 22
@@ -20,8 +18,12 @@ common:
 
 		email:
 			from: 'Tomáš Kolinger <tomas@kolinger.name>'
-			subject: 'VPN configuration'
+			subject: 'VPN certifikáty'
 
+		configurations:
+			'classic': 'classic.latte'
+			'telnet tcp': 'telnet-tcp.latte'
+			'network': 'network.latte'
 
 	php:
 		date.timezone: Europe/Prague
@@ -29,16 +31,15 @@ common:
 
 	nette:
 		database:
-			dsn: "sqlite:%appDir%/model/database.db"
+			dsn: "mysql:host=localhost;dbname=openvpn"
+			user: local
+			password: local
 
 		session:
 			expiration: 14 days
 
 
 	services:
-		authenticator:
-			class: Authenticator
-
 		routerFactory: RouterFactory(%useHttps%)
 
 		router:

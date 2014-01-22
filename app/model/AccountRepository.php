@@ -33,7 +33,6 @@ class AccountRepository extends Repository
 	private $paymentRepository;
 
 
-
 	/**
 	 * @param SSH $ssh
 	 * @param Nette\Database\Connection $connection
@@ -49,82 +48,50 @@ class AccountRepository extends Repository
 	}
 
 
-
 	/**
 	 * @param array $filters
 	 * @return Account[]
 	 */
 	public function findAll(array $filters = array())
 	{
-		$rows = $this->connection->table(static::TABLE_NAME)
-			->order('active DESC, createDate');
+		$sql = 'SELECT a.*, (CASE WHEN free = 1 THEN 2 WHEN p.id IS NOT NULL THEN 1 ELSE 0 END) AS state
+			FROM account a LEFT JOIN payment p ON a.id = account_id AND p.state = 0';
 
-		foreach ($filters as $key => $value) {
-			if ($value == -1) {
-				continue;
+		if (count($filters)) {
+			$sql .= ' WHERE';
+		}
+		$parameters = array();
+		if (isset($filters['username'])) {
+			$sql .= ' username LIKE \'%?%\'';
+			$parameters[] = $filters['username'];
+		}
+		if (isset($filters['email'])) {
+			if (isset($filters['username'])) {
+				$sql .= ' AND';
 			}
-			if ($key === 'state' || $key === 'active') {
-				$rows->where($key . ' = ?', $value);
-			} else {
-				$rows->where($key . ' LIKE ?', '%' . $value . '%');
+			$sql .= ' email LIKE \'%?%\'';
+			$parameters[] = $filters['email'];
+		}
+		if (isset($filters['state']) && $filters['state'] != -1) {
+			if (isset($filters['email'])) {
+				$sql .= ' AND';
 			}
+			$sql .= ' state = ?';
+			$parameters[] = $filters['state'];
+		}
+		if (isset($filters['active']) && $filters['active'] != -1) {
+			if (isset($filters['state']) && $filters['state'] != -1) {
+				$sql .= ' AND';
+			}
+			$sql .= ' active = ?';
+			$parameters[] = $filters['active'];
 		}
 
-		$accounts = $this->fillEntities('Account', $rows);
+		$sql .= ' ORDER BY active DESC, createDate';
 
-		foreach ($accounts as $account) {
-			if ($account->getFree()) {
-				$account->setState(Account::STATE_OK);
-			} else {
-				$unpaid = FALSE;
-				$waiting = FALSE;
-
-				$payments = $this->paymentRepository->findByAccount($account->getId());
-				$breaks = $this->paymentRepository->findBreaksByAccount($account->getId());
-				for ($year = $account->getCreateDate()->format('Y'); $year <= date('Y'); $year++) {
-					if ($year == $account->getCreateDate()->format('Y')) {
-						$start = $account->getCreateDate()->format('j') > 9 ? $account->getCreateDate()->format('n') + 1 : $account->getCreateDate()->format('n');
-						$end = 12;
-					} else if ($year == date('Y')) {
-						$end = date('n');
-						$start = 1;
-					} else {
-						$start = 1;
-						$end = 12;
-					}
-					if (strtotime($year . '-' . $start . '-01') < time()) {
-						for ($month = $start; $month <= $end; $month++) {
-							$break = isset($break) && $break !== NULL && ($break->getEnd()->getTimestamp() == time() || $break->getEnd()->getTimestamp() > strtotime(date($year . '-' . $month . '-01'))) ? $break : (isset($breaks[$year . '-' . $month]) ? $breaks[$year . '-' . $month] : NULL);
-							if (isset($payments[$year . '-' . $month])) {
-								if ($payments[$year . '-' . $month]->getState() == Payment::STATE_WAITING) {
-									$waiting = TRUE;
-								} else if ($payments[$year . '-' . $month]->getState() == Payment::STATE_UNPAID) {
-									if (!$break) {
-										$unpaid = TRUE;
-									}
-								}
-							} else {
-								if (!$break) {
-									$unpaid = TRUE;
-								}
-							}
-						}
-					}
-				}
-
-				if ($unpaid) {
-					$account->setState(Account::STATE_UNPAID);
-				} else if ($waiting) {
-					$account->setState(Account::STATE_WAITING);
-				} else {
-					$account->setState(Account::STATE_OK);
-				}
-			}
-		}
-
-		return $accounts;
+		$rows = $this->connection->queryArgs($sql, $parameters)->fetchAll();
+		return $this->fillEntities('Account', $rows);
 	}
-
 
 
 	/**
@@ -140,26 +107,21 @@ class AccountRepository extends Repository
 	}
 
 
-
 	/**
 	 * @param bool $free
 	 * @param string $username
 	 * @param string $email
-	 * @param string $name
 	 * @param string $note
 	 * @throws PDOException
 	 * @throws Nette\InvalidArgumentException
 	 */
-	public function create($free, $username, $email, $name, $note)
+	public function create($free, $username, $email, $note)
 	{
 		$createDate = new \DateTime();
 		$data = array(
-			'active' => TRUE,
 			'free' => $free,
 			'username' => $username,
 			'email' => $email,
-			'name' => $name,
-			'note' => $note,
 			'createDate' => $createDate->format('Y-m-d H:i:s'),
 		);
 
@@ -181,26 +143,22 @@ class AccountRepository extends Repository
 	}
 
 
-
 	/**
 	 * @param int $id
 	 * @param bool $free
 	 * @param string $email
-	 * @param string $name
 	 * @param string $note
 	 */
-	public function save($id, $free, $email, $name, $note)
+	public function save($id, $free, $email, $note)
 	{
 		$data = array(
 			'free' => $free,
 			'email' => $email,
-			'name' => $name,
 			'note' => $note,
 		);
 
 		$this->connection->query('UPDATE ' . static::TABLE_NAME . ' SET ? WHERE id = ?', $data, $id);
 	}
-
 
 
 	/**
@@ -213,7 +171,6 @@ class AccountRepository extends Repository
 	}
 
 
-
 	/**
 	 * @param Account $account
 	 */
@@ -224,7 +181,7 @@ class AccountRepository extends Repository
 		if (!is_dir($tempDir . '/certificates')) {
 			mkdir($tempDir . '/certificates');
 		}
-		$tempDir .=  '/certificates/' . \Nette\Utils\Strings::random();
+		$tempDir .= '/certificates/' . \Nette\Utils\Strings::random();
 		mkdir($tempDir);
 
 		// index.txt
@@ -256,17 +213,15 @@ class AccountRepository extends Repository
 	}
 
 
-
 	/************************ helpers ************************/
-
 
 
 	/**
 	 * @param string $name
 	 * @return mixed
 	 */
-	private function getConfig($name) {
+	private function getConfig($name)
+	{
 		return isset($this->container->parameters[$name]) ? $this->container->parameters[$name] : NULL;
 	}
-
 }

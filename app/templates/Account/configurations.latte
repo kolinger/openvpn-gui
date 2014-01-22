@@ -1,0 +1,25 @@
+{block content}
+
+<h2>Konfigurace pro účet {$account->getUsername()}</h2>
+
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>Název</th>
+			<th>Akce</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr n:foreach="$configurations as $configuration">
+			<td>{$configuration}</td>
+			<td>
+				<a n:href="Account:email, $account->getId(), $configuration" class="btn" class="question" data-question="Opravdu chcete odeslat kofiguraci {$configuration} e-mailem?">
+					Odeslat na e-mail
+				</a>
+				<a n:href="Account:download, $account->getId(), $configuration" class="btn">
+					Stáhnout
+				</a>
+			</td>
+		</tr>
+	</tbody>
+</table>

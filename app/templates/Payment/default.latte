@@ -1,0 +1,87 @@
+{block content}
+<h2>
+	Platby účtu {$account->getUsername()}
+	<a href="#form" class="btn btn-primary" data-toggle="modal" role="button" n:if="!$account->getFree()">Přidat platbu</a>
+</h2>
+{if $account->getFree()}
+	<p>Tenhle to má zadarmo! :)</p>
+{else}
+	{snippet table}
+		<p n:if="!count($payments)" class="alert alert-warning">Nebyly nalezeny žádné platby.</p>
+		<table class="table table-hover" n:if="count($payments)">
+			<thead>
+				<tr>
+					<th>Datum</th>
+					<th>Stav</th>
+					<th>Poznámka</th>
+					<th>Akce</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr n:foreach="$payments as $payment">
+					<td>{$payment->date}</td>
+					<td>
+						{if $payment->state == Payment::STATE_UNPAID}
+							<span class="label label-important">nezaplaceno</span>
+						{else}
+							<span class="label label-success">zaplaceno</span>
+						{/if}
+					</td>
+					<td>{$payment->note}</td>
+					<td>
+						<a n:href="this, payment => $payment->getId()" class="btn dialog-edit">Upravit</a>
+						<a n:href="delete, payment => $payment->getId()" class="btn btn-danger question"
+						   data-question="Opravdu chcete smazat platbu s obdobím {$payment->date}?">Smazat</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	{/snippet}
+
+	{snippet dialog}
+		<div id="form" class="payment-dialog modal hide" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h3 id="myModalLabel">{$dialogTitle}</h3>
+			</div>
+			{form form, class => 'form-horizontal create'}
+				<div class="modal-body">
+					<div class="alert alert-error" n:foreach="$form->errors as $error">{$error}</div>
+
+					<div class="control-group">
+						{label date, class => 'control-label' /}
+						<div class="controls">
+							{input date, class => 'span6'}
+						</div>
+					</div>
+
+					<div class="control-group">
+						{label state, class => 'control-label' /}
+						<div class="controls">
+							{input state, class => 'span6'}
+						</div>
+					</div>
+
+
+					<div class="control-group">
+						{label note, class => 'control-label' /}
+						<div class="controls">
+							{input note, class => 'span6'}
+						</div>
+					</div>
+
+					<div class="control-group">
+						<div class="controls">
+
+						</div>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button class="btn" data-dismiss="modal" aria-hidden="true">Zavřít</button>
+					{input save, class => 'btn btn-primary'}
+				</div>
+			{/form}
+		</div>
+	{/snippet}
+{/if}

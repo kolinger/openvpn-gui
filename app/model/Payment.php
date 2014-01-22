@@ -7,7 +7,6 @@ class Payment extends \Nette\Object
 {
 
 	const STATE_UNPAID = 0;
-	const STATE_WAITING = 1;
 	const STATE_OK = 2;
 
 	/**
@@ -21,7 +20,7 @@ class Payment extends \Nette\Object
 	private $state;
 
 	/**
-	 * @var \DateTime
+	 * @var string
 	 */
 	private $date;
 
@@ -87,7 +86,7 @@ class Payment extends \Nette\Object
 	 */
 	public function setDate($date)
 	{
-		$this->date = \Nette\DateTime::from($date);
+		$this->date = $date;
 	}
 
 

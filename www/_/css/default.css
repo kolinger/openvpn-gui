@@ -85,3 +85,7 @@ a:focus {
 .btn-group {
 	text-align: left;
 }
+
+.payment-dialog {
+	width: 600px;
+}
