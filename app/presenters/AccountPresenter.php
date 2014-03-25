@@ -129,13 +129,13 @@ class AccountPresenter extends BasePresenter
 				0 => 'deaktivováno',
 			));
 
-		$form->addSelect('state')
+		/*$form->addSelect('state')
 			->setItems(array(
 				-1 => 'vše',
 				Account::STATE_OK => 'v pořádku',
 				Account::STATE_UNPAID => 'nezaplaceno',
 				Account::STATE_FREE => 'zdaramo',
-			));
+			));*/
 
 		$form->addSubmit('filter', 'Filtrovat');
 
@@ -160,9 +160,9 @@ class AccountPresenter extends BasePresenter
 				$filters['email'] = trim($values->email);
 			}
 
-			if (in_array($values->state, array(-1, Account::STATE_OK, Account::STATE_UNPAID, Account::STATE_FREE))) {
+			/*if (in_array($values->state, array(-1, Account::STATE_OK, Account::STATE_UNPAID, Account::STATE_FREE))) {
 				$filters['state'] = $values->state;
-			}
+			}*/
 
 			if (in_array($values->active, array(-1, FALSE, TRUE))) {
 				$filters['active'] = $values->active;
@@ -200,8 +200,7 @@ class AccountPresenter extends BasePresenter
 			$username->setDisabled();
 		}
 
-		$form->addText('email', 'E-mail')
-			->setRequired('Musíte vyplnit e-mail');
+		$form->addText('email', 'E-mail');
 
 		$form->addCheckbox('free', 'Zdarma');
 

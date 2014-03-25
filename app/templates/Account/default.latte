@@ -7,7 +7,7 @@
 
 	{input email, class => 'input-small span2', placeholder => 'E-mail'}
 
-	{input state, class => 'span2'}
+	{*input state, class => 'span2'*}
 
 	{input active, class => 'span2'}
 
@@ -30,14 +30,16 @@
 			<td>{$account->getUserName()}</td>
 			<td>{$account->getEmail()}</td>
 			<td>
-				{if $account->getState() == Account::STATE_OK}
-					<span class="label label-success">v pořádku</span>
-				{elseif $account->getState() == Account::STATE_UNPAID}
-					<span class="label label-important">nezaplaceno</span>
-				{elseif $account->getState() == Account::STATE_FREE}
-					<span class="label label-success">zadarmo</span>
+				{if $presenter->isPaymentsEnabled()}
+					{if $account->getState() == Account::STATE_OK}
+						<span class="label label-success">v pořádku</span>
+					{elseif $account->getState() == Account::STATE_UNPAID}
+						<span class="label label-important">nezaplaceno</span>
+					{elseif $account->getState() == Account::STATE_FREE}
+						<span class="label label-success">zadarmo</span>
+					{/if}
 				{/if}
-
+				
 				{if $account->getActive()}
 					<span class="label label-success">aktivní</span>
 				{else}
@@ -45,7 +47,7 @@
 				{/if}
 			</td>
 			<td>
-				<a n:href="Payment:default, $account->getId()" class="btn">Platby</a>
+				<a n:href="Payment:default, $account->getId()" class="btn" n:if="$presenter->isPaymentsEnabled()">Platby</a>
 
 				<div class="btn-group">
 					<button class="btn dropdown-toggle" data-toggle="dropdown">Správa <span class="caret"></span></button>

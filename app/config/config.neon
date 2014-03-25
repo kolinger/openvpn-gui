@@ -6,7 +6,9 @@
 #
 common:
 	parameters:
-		useHttps: true
+		payments: false
+		useHttps: false
+
 		ssh:
 			server: localhost
 			port: 22

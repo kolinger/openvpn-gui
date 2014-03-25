@@ -11,4 +11,13 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 		$this->template->title = 'OpenVPN GUI';
 	}
 
+
+	/**
+	 * @return bool
+	 */
+	public function isPaymentsEnabled()
+	{
+		return $this->context->parameters['payments'];
+	}
+
 }
